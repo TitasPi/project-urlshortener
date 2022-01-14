@@ -38,12 +38,12 @@ app.post('/api/shorturl/', function(req, res) {
   let url;
   try {
     url = new URL(req.body.url);
+    if(url.protocol !== 'http' || url.protocol !== 'https') throw new Error('invalid protocol');
   } catch (error) {
     return res.json({error: 'invalid url'});
   }
   dns.lookup(url.hostname, (err, address, family) => {
     if (err) return res.json({error: 'invalid url'});
-
     if(shortUrls.hasUrl(req.body.url)) {
       const index = shortUrls.findIndex((i) => i == req.body.url);
       return res.json({original_url: req.body.url, short_url: index});
